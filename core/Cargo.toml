@@ -1,0 +1,12 @@
+[package]
+name = "nes-emulator"
+version = "0.1.0"
+edition = "2018"
+default-run = "nes-emulator"
+
+[[bin]]
+name = "nes-emulator"
+path = "src/main.rs"
+
+[dependencies]
+cpu = { path = "../cpu" }
