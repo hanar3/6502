@@ -1,7 +1,4 @@
-use cpu::{
-    CPU,
-    Flag
-};
+use cpu::{Flag, CPU};
 
 fn main() {
     println!("Hello world")
@@ -26,13 +23,12 @@ mod test {
         cpu.load_and_run(vec![0xa9, 0x00, 0x00]);
         assert!(cpu.status & 0b0000_0010 == 0b10);
     }
-    
+
     #[test]
     fn test_0xa9_lda_negative_flag() {
         let mut cpu = CPU::new();
         cpu.load_and_run(vec![0xa9, 0xff, 0x00]);
         assert!(cpu.status & 0b1000_0000 == 0b1000_0000);
-
     }
 
     #[test]
@@ -54,15 +50,23 @@ mod test {
     #[test]
     fn test_inx_overflow() {
         let mut cpu = CPU::new();
-        cpu.load_and_run(vec![0xa9, 0xff, 0xaa,0xe8, 0xe8, 0x00]);
+        cpu.load_and_run(vec![0xa9, 0xff, 0xaa, 0xe8, 0xe8, 0x00]);
         assert_eq!(cpu.register_x, 1)
     }
 
     #[test]
     fn test_lda_zero_page() {
-      let mut cpu = CPU::new();
-      cpu.mem_write(0xa, 5);
-      cpu.load_and_run(vec![0xa5, 0xa, 0x0]);
-      assert_eq!(cpu.register_a, 5);
+        let mut cpu = CPU::new();
+        cpu.mem_write(0xa, 5);
+        cpu.load_and_run(vec![0xa5, 0xa, 0x0]);
+        assert_eq!(cpu.register_a, 5);
+    }
+    #[test]
+    fn test_sta_zero_page() {
+        let mut cpu = CPU::new();
+        // LDA 10
+        // STA 0X55
+        cpu.load_and_run(vec![0xa9, 0xa, 0x85, 0x55]);
+        assert_eq!(cpu.mem_read(0x55), 10);
     }
 }
